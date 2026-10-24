@@ -1,0 +1,172 @@
+[
+  {
+    "id": "PII-TEST-001",
+    "type": "input",
+    "locale": "US",
+    "text": "Hello, my email is alice.smith@example.com and my direct line is 415-555-2671.",
+    "expected_entities": [
+      {
+        "entity_type": "EMAIL_ADDRESS",
+        "value": "alice.smith@example.com"
+      },
+      {
+        "entity_type": "PHONE_NUMBER",
+        "value": "415-555-2671"
+      }
+    ],
+    "expected_redacted": "Hello, my email is [EMAIL_ADDRESS] and my direct line is [PHONE_NUMBER]."
+  },
+  {
+    "id": "PII-TEST-002",
+    "type": "input",
+    "locale": "US",
+    "text": "Please update my Social Security Number to 987-65-4320 for tax reporting.",
+    "expected_entities": [
+      {
+        "entity_type": "US_SSN",
+        "value": "987-65-4320"
+      }
+    ],
+    "expected_redacted": "Please update my Social Security Number to [US_SSN] for tax reporting."
+  },
+  {
+    "id": "PII-TEST-003",
+    "type": "output",
+    "locale": "Global",
+    "text": "Your transaction was billed to credit card 4532-0123-4567-8910 on file.",
+    "expected_entities": [
+      {
+        "entity_type": "CREDIT_CARD",
+        "value": "4532-0123-4567-8910"
+      }
+    ],
+    "expected_redacted": "Your transaction was billed to credit card [CREDIT_CARD] on file."
+  },
+  {
+    "id": "PII-TEST-004",
+    "type": "output",
+    "locale": "Global",
+    "text": "You can reach customer support agent Alex at alex.support@fincorp-corp.org.",
+    "expected_entities": [
+      {
+        "entity_type": "EMAIL_ADDRESS",
+        "value": "alex.support@fincorp-corp.org"
+      }
+    ],
+    "expected_redacted": "You can reach customer support agent Alex at [EMAIL_ADDRESS]."
+  },
+  {
+    "id": "PII-TEST-005",
+    "type": "input",
+    "locale": "IN",
+    "text": "My Indian PAN number is ABCDE1234F and my mobile number is 9876543210.",
+    "expected_entities": [
+      {
+        "entity_type": "IN_PAN",
+        "value": "ABCDE1234F"
+      },
+      {
+        "entity_type": "PHONE_NUMBER",
+        "value": "9876543210"
+      }
+    ],
+    "expected_redacted": "My Indian PAN number is [IN_PAN] and my mobile number is [PHONE_NUMBER]."
+  },
+  {
+    "id": "PII-TEST-006",
+    "type": "input",
+    "locale": "IN",
+    "text": "For KYC verification, here is my Aadhaar card number: 3675 9834 6012.",
+    "expected_entities": [
+      {
+        "entity_type": "IN_AADHAAR",
+        "value": "3675 9834 6012"
+      }
+    ],
+    "expected_redacted": "For KYC verification, here is my Aadhaar card number: [IN_AADHAAR]."
+  },
+  {
+    "id": "PII-TEST-007",
+    "type": "input",
+    "locale": "UK",
+    "text": "My UK National Insurance number is QQ 12 34 56 A and emergency phone is +44 20 7946 0919.",
+    "expected_entities": [
+      {
+        "entity_type": "UK_NINO",
+        "value": "QQ 12 34 56 A"
+      },
+      {
+        "entity_type": "PHONE_NUMBER",
+        "value": "+44 20 7946 0919"
+      }
+    ],
+    "expected_redacted": "My UK National Insurance number is [UK_NINO] and emergency phone is [PHONE_NUMBER]."
+  },
+  {
+    "id": "PII-TEST-008",
+    "type": "output",
+    "locale": "Global",
+    "text": "Please configure your webhook endpoint to connect to server IP 192.168.1.105 with auth token sk_live_51M0abcdef1234567890.",
+    "expected_entities": [
+      {
+        "entity_type": "IP_ADDRESS",
+        "value": "192.168.1.105"
+      },
+      {
+        "entity_type": "API_KEY",
+        "value": "sk_live_51M0abcdef1234567890"
+      }
+    ],
+    "expected_redacted": "Please configure your webhook endpoint to connect to server IP [IP_ADDRESS] with auth token [API_KEY]."
+  },
+  {
+    "id": "PII-TEST-009",
+    "type": "input",
+    "locale": "US",
+    "text": "The patient Dr. Gregory House was admitted under Dr. James Wilson on March 14.",
+    "expected_entities": [
+      {
+        "entity_type": "PERSON_NAME",
+        "value": "Dr. Gregory House"
+      },
+      {
+        "entity_type": "PERSON_NAME",
+        "value": "Dr. James Wilson"
+      }
+    ],
+    "expected_redacted": "The patient [PERSON_NAME] was admitted under [PERSON_NAME] on March 14."
+  },
+  {
+    "id": "PII-TEST-010",
+    "type": "negative_control",
+    "locale": "Global",
+    "text": "Our product model number is ISO-9001 and order reference is ORD-8849120. Total amount is $450.00.",
+    "expected_entities": [],
+    "expected_redacted": "Our product model number is ISO-9001 and order reference is ORD-8849120. Total amount is $450.00."
+  },
+  {
+    "id": "PII-TEST-011",
+    "type": "negative_control",
+    "locale": "Global",
+    "text": "Meeting scheduled for 2026-10-24 at 14:30 UTC in Room 404.",
+    "expected_entities": [],
+    "expected_redacted": "Meeting scheduled for 2026-10-24 at 14:30 UTC in Room 404."
+  },
+  {
+    "id": "PII-TEST-012",
+    "type": "output",
+    "locale": "US",
+    "text": "We dispatched the confirmation letter to Mr. Johnathan Doe at j.doe77@company.org with tracking code 123-456-789.",
+    "expected_entities": [
+      {
+        "entity_type": "PERSON_NAME",
+        "value": "Mr. Johnathan Doe"
+      },
+      {
+        "entity_type": "EMAIL_ADDRESS",
+        "value": "j.doe77@company.org"
+      }
+    ],
+    "expected_redacted": "We dispatched the confirmation letter to [PERSON_NAME] at [EMAIL_ADDRESS] with tracking code 123-456-789."
+  }
+]

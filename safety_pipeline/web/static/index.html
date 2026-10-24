@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Safety & Compliance Readiness Studio</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-light: #334155;
+      --border: #475569;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --accent: #8b5cf6;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --info: #06b6d4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    
+    /* Header */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 24px;
+      margin-bottom: 20px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon { font-size: 28px; }
+    .brand-title h1 { font-size: 20px; font-weight: 700; color: #fff; }
+    .brand-title p { font-size: 12px; color: var(--text-muted); }
+    .top-actions { display: flex; gap: 10px; align-items: center; }
+
+    /* Legal Banner */
+    .legal-alert {
+      background: rgba(245, 158, 11, 0.12);
+      border-left: 4px solid var(--warning);
+      padding: 12px 18px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 12px;
+      color: #fde68a;
+    }
+
+    /* Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* Drawer / Findings Expansion */
+    .finding-expandable {
+      background: rgba(15, 23, 42, 0.7);
+      border-top: 1px dashed var(--border);
+      padding: 14px 18px;
+    }
+    .finding-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+    .finding-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+    }
+    .finding-box-title {
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    
+    .view-panel { display: none; }
+    .view-panel.active { display: block; }
+
+    /* Layout Grid */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Form Controls */
+    label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; display: block; }
+    select, input, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 10px 12px;
+      font-size: 14px;
+      margin-bottom: 14px;
+      font-family: inherit;
+    }
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .toggle-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .toggle-item input[type="checkbox"] { width: auto; margin-bottom: 0; cursor: pointer; }
+
+    /* Buttons */
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: var(--primary-hover); }
+    .btn-secondary { background: var(--surface-light); color: var(--text); }
+    .btn-secondary:hover { background: #475569; }
+    .btn-danger { background: var(--danger); }
+    .btn-success { background: var(--success); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { background: var(--surface-light); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+    /* Output Displays */
+    .display-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: monospace;
+      min-height: 50px;
+    }
+    .highlight-redacted {
+      background: rgba(59, 130, 246, 0.25);
+      color: #93c5fd;
+      padding: 2px 4px;
+      border-radius: 3px;
+      border: 1px solid #3b82f6;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-pass { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
+    .badge-fail { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+    .badge-critical { background: #ef4444; color: #fff; }
+    .badge-high { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+    .badge-moderate { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #3b82f6; }
+    .badge-low { background: rgba(100, 116, 139, 0.2); color: #cbd5e1; border: 1px solid #64748b; }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    th { background: var(--surface-light); color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+    tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    /* Stat Cards */
+    .stat-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .stat-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-value { font-size: 26px; font-weight: 700; color: #fff; }
+    .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Chips */
+    .chip-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .chip {
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .chip:hover { background: var(--primary); color: #fff; }
+
+    .telemetry-tag {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-block;
+      margin-right: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-icon">🛡️</div>
+        <div class="brand-title">
+          <h1>AI Safety & Compliance Readiness Studio</h1>
+          <p>Interactive Red-Teaming, Two-Sided PII Guardrails & Regulatory Audit Pipeline</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="btn btn-sm" onclick="runFullPipeline()">⚡ Run Complete Assessment</button>
+        <button class="btn btn-sm btn-secondary" onclick="openArtifact('compliance_dashboard.html')">📊 Dashboard</button>
+        <button class="btn btn-sm btn-secondary" onclick="openArtifact('compliance_readiness_report.md')">📑 Audit Report</button>
+      </div>
+    </div>
+
+    <!-- Governance Notice -->
+    <div class="legal-alert">
+      ⚠️ <strong>Legal & Governance Boundary Notice:</strong> This interactive studio is an engineering risk assessment and audit-preparation workbench. Automated tests and generated metrics do not constitute statutory certification under the EU AI Act or NIST AI RMF. Launch authorization requires context-specific review by qualified legal, security, and privacy owners.
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchView('view-studio', this)">🛡️ Interactive Safety Studio</button>
+      <button class="tab-btn" onclick="switchView('view-guardrail', this)">🔍 PII Guardrail Lab</button>
+      <button class="tab-btn" onclick="switchView('view-benchmark', this)">🚀 Adversarial & Retest Benchmark</button>
+      <button class="tab-btn" onclick="switchView('view-findings', this)">📋 Detailed Findings Log</button>
+      <button class="tab-btn" onclick="switchView('view-matrix', this)">📜 Compliance Audit Matrix</button>
+      <button class="tab-btn" onclick="switchView('view-downloads', this)">📁 Evidence Artifacts & Exports</button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 1: INTERACTIVE SAFETY STUDIO -->
+    <!-- ========================================== -->
+    <div id="view-studio" class="view-panel active">
+      <div class="grid-2">
+        
+        <!-- Left: Prompt & Target Settings -->
+        <div class="card">
+          <div class="card-title">
+            <span>Target Assistant Configuration</span>
+            <span id="targetStatusBadge" class="badge badge-low">Local Simulated</span>
+          </div>
+
+          <label>Target Assistant Mode</label>
+          <select id="studioTargetMode" onchange="updateTargetModeDesc()">
+            <option value="vulnerable">Baseline Assistant (Vulnerable: naive prompts & secrets in context)</option>
+            <option value="hardened">Remediated Assistant (Hardened: safety fences & retrieval isolation)</option>
+            <option value="external">External LLM API (OpenAI / Ollama HTTP Endpoint)</option>
+          </select>
+          <div id="externalApiInputGroup" style="display:none; margin-bottom: 12px;">
+            <label>External Endpoint URL</label>
+            <input type="text" id="externalApiUrl" placeholder="http://localhost:8000/v1/chat/completions">
+          </div>
+
+          <label>Defense-in-Depth Guardrail Controls</label>
+          <div class="toggle-group">
+            <label class="toggle-item">
+              <input type="checkbox" id="enableInputGuardrail" checked>
+              <span>Enable Input PII Guardrail</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="enableOutputGuardrail" checked>
+              <span>Enable Output PII Guardrail</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="enablePlaceholderPreserve">
+              <span>Preserve Session Placeholders</span>
+            </label>
+          </div>
+
+          <label>Load Attack Probe Preset</label>
+          <select id="studioProbeSelect" onchange="loadProbePreset()">
+            <option value="">-- Choose a pre-built red-team probe --</option>
+          </select>
+
+          <label>User Input Prompt</label>
+          <textarea id="studioPromptInput" rows="5" placeholder="Enter adversarial probe or customer prompt with PII..."></textarea>
+
+          <div style="display: flex; gap: 10px;">
+            <button class="btn" style="flex:1;" onclick="executeStudioChat()">🚀 Execute Single Probe</button>
+            <button class="btn btn-outline" onclick="clearStudio()">Clear</button>
+          </div>
+          <div style="margin-top: 12px; border-top: 1px solid var(--border); padding-top: 12px;">
+            <button class="btn btn-secondary" style="width: 100%;" onclick="runFullPipelineFromStudio()">
+              ⚡ Run Full Pipeline on this Target (All 20 Probes + PII Benchmark + Audit Matrix)
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Execution Telemetry & Findings -->
+        <div class="card">
+          <div class="card-title">
+            <span>Probe Telemetry & Safety Verdict</span>
+            <span id="studioVerdictBadge" class="badge badge-low">Awaiting Execution</span>
+          </div>
+
+          <div>
+            <label>1. Sanitized Model Input (What LLM Receives)</label>
+            <div id="dispSanitizedInput" class="display-block text-muted">Input pre-processing preview...</div>
+          </div>
+
+          <div>
+            <label>2. Raw Model Completion (Before Output Guardrail)</label>
+            <div id="dispRawResponse" class="display-block text-muted">Raw generation...</div>
+          </div>
+
+          <div>
+            <label>3. Final Sanitized Output (What End-User Sees)</label>
+            <div id="dispFinalOutput" class="display-block text-muted">Final user output...</div>
+          </div>
+
+          <div>
+            <label>4. Safety Assertion Analysis</label>
+            <div id="dispAssertionResult" class="display-block text-muted">Safety checks...</div>
+          </div>
+
+          <div style="margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px;">
+            <span class="telemetry-tag" id="telInputMs">Input Guardrail: 0 ms</span>
+            <span class="telemetry-tag" id="telInferenceMs">Inference: 0 ms</span>
+            <span class="telemetry-tag" id="telOutputMs">Output Guardrail: 0 ms</span>
+            <span class="telemetry-tag" id="telTotalMs">Total: 0 ms</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: PII GUARDRAIL LAB -->
+    <!-- ========================================== -->
+    <div id="view-guardrail" class="view-panel">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Two-Sided PII Redactor Playground</div>
+          
+          <label>Sample Test Presets</label>
+          <div class="chip-container">
+            <span class="chip" onclick="loadPIISample('us_ssn')">US SSN & Phone</span>
+            <span class="chip" onclick="loadPIISample('pci_card')">PCI Credit Card</span>
+            <span class="chip" onclick="loadPIISample('india_kyc')">India PAN & Aadhaar</span>
+            <span class="chip" onclick="loadPIISample('uk_nino')">UK NINO & Phone</span>
+            <span class="chip" onclick="loadPIISample('infra_secrets')">API Token & IP</span>
+            <span class="chip" onclick="loadPIISample('clean_text')">Clean Negative Control</span>
+          </div>
+
+          <label>Processing Direction</label>
+          <select id="piiDirection">
+            <option value="input">Input Pre-processing (Sanitize user prompt before model)</option>
+            <option value="output">Output Post-processing (Redact model response before user display)</option>
+          </select>
+
+          <label>Test Text</label>
+          <textarea id="piiTextInput" rows="6" placeholder="Enter text containing sensitive entities..."></textarea>
+
+          <div class="toggle-group">
+            <label class="toggle-item">
+              <input type="checkbox" id="piiPreservePlaceholders">
+              <span>Enable Ephemeral Placeholder Session Table</span>
+            </label>
+          </div>
+
+          <button class="btn" onclick="executePIIRedaction()">🔍 Inspect & Redact</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Redaction Result & Entity Telemetry</div>
+          
+          <label>Redacted Text Output</label>
+          <div id="piiRedactedOutput" class="display-block">Sanitized text appears here...</div>
+
+          <label>Detected Sensitive Entities</label>
+          <table>
+            <thead>
+              <tr>
+                <th>Entity Type</th>
+                <th>Value Detected</th>
+                <th>Locale</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody id="piiEntityTableBody">
+              <tr><td colspan="4" class="text-muted" style="text-align:center;">No entities detected yet.</td></tr>
+            </tbody>
+          </table>
+
+          <div id="piiRestorationDemo" style="display:none; margin-top: 16px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 6px;">
+            <p style="font-size: 12px; font-weight: 600; color: #93c5fd; margin-bottom: 6px;">Session Token Vault Active:</p>
+            <button class="btn btn-sm btn-secondary" onclick="restorePIISession()">🔓 Simulate Authorized Restoration</button>
+            <div id="dispRestoredText" style="margin-top: 8px; font-size: 12px;" class="text-muted"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: ADVERSARIAL BENCHMARK & RETEST -->
+    <!-- ========================================== -->
+    <div id="view-benchmark" class="view-panel">
+      <div class="card">
+        <div class="card-title">
+          <span>Adversarial Red-Team Benchmark & Retest Execution</span>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-sm" onclick="runBenchmarkAdversarial('vulnerable', false)">▶️ Run Baseline (Vulnerable)</button>
+            <button class="btn btn-sm btn-success" onclick="runBenchmarkAdversarial('hardened', true)">🛡️ Run Remediated (Hardened + Guardrails)</button>
+            <button class="btn btn-sm btn-secondary" onclick="runPIIBenchmarkSuite()">📊 Run Synthetic PII Benchmark</button>
+          </div>
+        </div>
+
+        <!-- Telemetry Stats -->
+        <div class="grid-4" style="margin-bottom: 20px;">
+          <div class="stat-box">
+            <div class="stat-label">Total Test Probes</div>
+            <div class="stat-value" id="benchTotalProbes">20</div>
+            <div class="stat-sub">Across 5 core categories</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Pass Rate</div>
+            <div class="stat-value" id="benchPassRate" style="color: #ef4444;">5.0%</div>
+            <div class="stat-sub" id="benchPassDetail">1 passed / 19 failed</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">High / Critical Findings</div>
+            <div class="stat-value" id="benchSevCount" style="color: #ef4444;">16</div>
+            <div class="stat-sub">Actionable vulnerabilities</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Retest Progression</div>
+            <div class="stat-value" id="benchRetestRate" style="color: #10b981;">100.0%</div>
+            <div class="stat-sub">19 vulnerabilities fixed</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+          <h4 style="font-size: 14px;">Probe Test Execution Results</h4>
+          <div>
+            <select id="filterSeverity" onchange="filterFindingsTable()" style="width: auto; padding: 4px 8px; margin-bottom: 0;">
+              <option value="ALL">All Severities</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Moderate">Moderate</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Probe ID</th>
+              <th>Name & Category</th>
+              <th>Severity</th>
+              <th>Status</th>
+              <th>Failure Observation / Expected Safe Behavior</th>
+            </tr>
+          </thead>
+          <tbody id="findingsTableBody">
+            <tr><td colspan="5" style="text-align:center;" class="text-muted">Loading test results...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3.5: DEDICATED FINDINGS LOG -->
+    <!-- ========================================== -->
+    <div id="view-findings" class="view-panel">
+      <div class="card">
+        <div class="card-title">
+          <span>Adversarial Findings Log (Evidence, Reproduction Steps & Remediation)</span>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <select id="findingsFilterSev" onchange="filterDedicatedFindings()" style="width: auto; padding: 4px 10px; margin-bottom: 0;">
+              <option value="ALL">All Severities</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Moderate">Moderate</option>
+              <option value="Low">Low</option>
+            </select>
+            <button class="btn btn-sm btn-secondary" onclick="openArtifact('findings_log.md')">📑 Markdown Report</button>
+            <button class="btn btn-sm btn-outline" onclick="openArtifact('findings.csv')">📥 Export CSV</button>
+          </div>
+        </div>
+        <p class="text-muted" style="margin-bottom: 16px; font-size: 13px;">
+          Detailed records of each adversarial security finding. Includes calibrated severity, confirmed reproduction instructions, prompt and completion empirical evidence, and remediation actions.
+        </p>
+        <div id="dedicatedFindingsList">
+          <div style="text-align:center; padding: 20px;" class="text-muted">Loading findings records...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: COMPLIANCE AUDIT MATRIX -->
+    <!-- ========================================== -->
+    <div id="view-matrix" class="view-panel">
+      <div class="card">
+        <div class="card-title">
+          <span>Compliance Audit Matrix (NIST AI RMF 1.0 & EU AI Act)</span>
+          <select id="filterFramework" onchange="filterMatrixTable()" style="width: auto; padding: 6px 12px; margin-bottom: 0;">
+            <option value="ALL">All Frameworks</option>
+            <option value="NIST">NIST AI RMF 1.0</option>
+            <option value="EU">EU AI Act (Preparation)</option>
+          </select>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Control ID</th>
+              <th>Framework</th>
+              <th>Function / Article</th>
+              <th>Severity</th>
+              <th>Status</th>
+              <th>Mitigation Strategy & Owner</th>
+              <th>Test Evidence</th>
+            </tr>
+          </thead>
+          <tbody id="matrixTableBody">
+            <tr><td colspan="7" style="text-align:center;" class="text-muted">Loading audit matrix...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: DOWNLOADS & EXPORTS -->
+    <!-- ========================================== -->
+    <div id="view-downloads" class="view-panel">
+      <div class="card">
+        <div class="card-title">Audit Artifacts, Test Evidence & Reports</div>
+        <p class="text-muted" style="margin-bottom: 16px;">
+          All machine-readable and executive artifacts generated during pipeline runs are stored in the local artifacts directory:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Artifact Name</th>
+              <th>Format</th>
+              <th>Purpose & Stakeholder Audience</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>compliance_dashboard.html</code></td>
+              <td>HTML / CSS</td>
+              <td>Standalone Interactive Dashboard (Leadership, Product Owners)</td>
+              <td><button class="btn btn-sm" onclick="openArtifact('compliance_dashboard.html')">Open</button></td>
+            </tr>
+            <tr>
+              <td><code>compliance_readiness_report.md</code></td>
+              <td>Markdown</td>
+              <td>Comprehensive Audit Matrix Report (Legal, Security, GRC)</td>
+              <td><button class="btn btn-sm btn-secondary" onclick="openArtifact('compliance_readiness_report.md')">View</button></td>
+            </tr>
+            <tr>
+              <td><code>audit_matrix.json</code></td>
+              <td>JSON</td>
+              <td>Structured Framework Controls & Test Evidence Links</td>
+              <td><button class="btn btn-sm btn-secondary" onclick="openArtifact('audit_matrix.json')">JSON</button></td>
+            </tr>
+            <tr>
+              <td><code>findings_log.md</code></td>
+              <td>Markdown</td>
+              <td>Detailed Findings Log (Reproduction Steps, Evidence, Remediation)</td>
+              <td><button class="btn btn-sm btn-secondary" onclick="openArtifact('findings_log.md')">View</button></td>
+            </tr>
+            <tr>
+              <td><code>findings_log.json</code></td>
+              <td>JSON</td>
+              <td>Full Adversarial Probe Execution Telemetry & Dumps</td>
+              <td><button class="btn btn-sm btn-secondary" onclick="openArtifact('findings_log.json')">JSON</button></td>
+            </tr>
+            <tr>
+              <td><code>compliance_matrix.csv</code></td>
+              <td>CSV</td>
+              <td>Spreadsheet for Corporate Risk & Compliance Tracking</td>
+              <td><button class="btn btn-sm btn-secondary" onclick="openArtifact('compliance_matrix.csv')">CSV</button></td>
+            </tr>
+            <tr>
+              <td><code>findings.csv</code></td>
+              <td>CSV</td>
+              <td>Spreadsheet of Technical Red-Teaming Results</td>
+              <td><button class="btn btn-sm btn-secondary" onclick="openArtifact('findings.csv')">CSV</button></td>
+            </tr>
+            <tr>
+              <td><code>promptfoo.yaml</code></td>
+              <td>YAML</td>
+              <td>Standard configuration for <code>npx promptfoo eval</code></td>
+              <td><button class="btn btn-sm btn-outline" onclick="openArtifact('promptfoo.yaml')">Config</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let probesList = [];
+    let currentFindings = [];
+    let currentMatrix = [];
+    let activeSessionId = null;
+
+    // Initialize application data
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadProbes();
+      await loadInitialFindings();
+      await loadInitialMatrix();
+    });
+
+    function switchView(viewId, btnElem) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
+      if (btnElem) {
+        btnElem.classList.add('active');
+      } else if (window.event && window.event.target) {
+        window.event.target.classList.add('active');
+      }
+      const targetPanel = document.getElementById(viewId);
+      if (targetPanel) targetPanel.classList.add('active');
+      if (viewId === 'view-findings') renderDedicatedFindings(currentFindings);
+    }
+
+    async function loadProbes() {
+      try {
+        const res = await fetch('/api/probes');
+        probesList = await res.json();
+        const select = document.getElementById('studioProbeSelect');
+        select.innerHTML = '<option value="">-- Choose a pre-built red-team probe --</option>';
+        probesList.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.id;
+          opt.textContent = `[${p.id}] ${p.name} (${p.category} - ${p.severity})`;
+          select.appendChild(opt);
+        });
+      } catch (err) {
+        console.error("Failed to load probes:", err);
+      }
+    }
+
+    function loadProbePreset() {
+      const pid = document.getElementById('studioProbeSelect').value;
+      if (!pid) return;
+      const probe = probesList.find(p => p.id === pid);
+      if (probe) {
+        document.getElementById('studioPromptInput').value = probe.prompt;
+      }
+    }
+
+    function updateTargetModeDesc() {
+      const mode = document.getElementById('studioTargetMode').value;
+      const extGroup = document.getElementById('externalApiInputGroup');
+      const badge = document.getElementById('targetStatusBadge');
+      if (mode === 'external') {
+        extGroup.style.display = 'block';
+        badge.textContent = 'External API';
+        badge.className = 'badge badge-moderate';
+      } else if (mode === 'hardened') {
+        extGroup.style.display = 'none';
+        badge.textContent = 'Remediated Hardened';
+        badge.className = 'badge badge-pass';
+      } else {
+        extGroup.style.display = 'none';
+        badge.textContent = 'Baseline Vulnerable';
+        badge.className = 'badge badge-fail';
+      }
+    }
+
+    async function executeStudioChat() {
+      const prompt = document.getElementById('studioPromptInput').value.trim();
+      if (!prompt) {
+        alert("Please enter a prompt or select a probe preset.");
+        return;
+      }
+
+      const mode = document.getElementById('studioTargetMode').value;
+      const enableIn = document.getElementById('enableInputGuardrail').checked;
+      const enableOut = document.getElementById('enableOutputGuardrail').checked;
+      const preserve = document.getElementById('enablePlaceholderPreserve').checked;
+      const extUrl = document.getElementById('externalApiUrl').value.trim() || null;
+
+      document.getElementById('studioVerdictBadge').textContent = 'Executing...';
+      document.getElementById('studioVerdictBadge').className = 'badge badge-moderate';
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: prompt,
+            target_mode: mode,
+            enable_input_guardrail: enableIn,
+            enable_output_guardrail: enableOut,
+            preserve_placeholders: preserve,
+            external_url: extUrl
+          })
+        });
+        const data = await res.json();
+
+        document.getElementById('dispSanitizedInput').textContent = data.sanitized_prompt;
+        document.getElementById('dispRawResponse').textContent = data.raw_model_response;
+        document.getElementById('dispFinalOutput').textContent = data.sanitized_model_response;
+
+        // Display assertion
+        const verdict = document.getElementById('studioVerdictBadge');
+        if (data.passed) {
+          verdict.textContent = 'SAFE / BOUNDARY MAINTAINED';
+          verdict.className = 'badge badge-pass';
+          document.getElementById('dispAssertionResult').innerHTML = '<span style="color:#34d399;">✅ Safety boundaries held. No forbidden leaks or harmful advice detected.</span>';
+        } else {
+          verdict.textContent = 'VULNERABILITY DETECTED';
+          verdict.className = 'badge badge-fail';
+          document.getElementById('dispAssertionResult').innerHTML = `<span style="color:#f87171;">❌ ${data.failure_reason}</span>`;
+        }
+
+        // Telemetry timings
+        document.getElementById('telInputMs').textContent = `Input Guardrail: ${data.timings_ms.input_guardrail_ms} ms`;
+        document.getElementById('telInferenceMs').textContent = `Inference: ${data.timings_ms.inference_ms} ms`;
+        document.getElementById('telOutputMs').textContent = `Output Guardrail: ${data.timings_ms.output_guardrail_ms} ms`;
+        document.getElementById('telTotalMs').textContent = `Total: ${data.timings_ms.total_ms} ms`;
+
+      } catch (e) {
+        alert("Error executing chat probe: " + e.message);
+      }
+    }
+
+    function clearStudio() {
+      document.getElementById('studioPromptInput').value = '';
+      document.getElementById('dispSanitizedInput').textContent = 'Input pre-processing preview...';
+      document.getElementById('dispRawResponse').textContent = 'Raw generation...';
+      document.getElementById('dispFinalOutput').textContent = 'Final user output...';
+      document.getElementById('dispAssertionResult').textContent = 'Safety checks...';
+      document.getElementById('studioVerdictBadge').textContent = 'Awaiting Execution';
+      document.getElementById('studioVerdictBadge').className = 'badge badge-low';
+    }
+
+    // PII Lab Helpers
+    const PII_SAMPLES = {
+      us_ssn: "Patient John Doe (DOB 1984-05-12) with SSN 987-65-4320 has phone 415-555-2671 and email j.doe@hospital.org.",
+      pci_card: "Billing statement reconciliation for invoice #9921: card number 4532-0123-4567-8910 charged $120.00.",
+      india_kyc: "KYC submission: Indian PAN is ABCDE1234F, Aadhaar card number is 3675 9834 6012, and mobile is 9876543210.",
+      uk_nino: "Employee Alex Smith, UK National Insurance number QQ 12 34 56 A, emergency phone +44 20 7946 0919.",
+      infra_secrets: "Server deployment configuration at IP 192.168.1.105 with production key sk_live_51M0abcdef1234567890.",
+      clean_text: "Meeting scheduled for 2026-10-24 at 14:00 with Model ISO-9001 and total cost $450.00."
+    };
+
+    function loadPIISample(key) {
+      document.getElementById('piiTextInput').value = PII_SAMPLES[key] || '';
+    }
+
+    async function executePIIRedaction() {
+      const text = document.getElementById('piiTextInput').value.trim();
+      const dir = document.getElementById('piiDirection').value;
+      const preserve = document.getElementById('piiPreservePlaceholders').checked;
+
+      if (!text) {
+        alert("Please enter text to test PII detection.");
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/guardrail/redact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: text,
+            direction: dir,
+            preserve_placeholders: preserve
+          })
+        });
+        const data = await res.json();
+
+        document.getElementById('piiRedactedOutput').textContent = data.redacted_text;
+
+        const tbody = document.getElementById('piiEntityTableBody');
+        tbody.innerHTML = '';
+        if (data.entities_detected && data.entities_detected.length > 0) {
+          data.entities_detected.forEach(e => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td><code>${e.entity_type}</code></td>
+              <td><strong>${e.value}</strong></td>
+              <td>${e.locale || 'Global'}</td>
+              <td><span class="badge badge-pass">${(e.confidence * 100).toFixed(0)}%</span></td>
+            `;
+            tbody.appendChild(row);
+          });
+        } else {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;" class="text-muted">Zero sensitive entities detected (Clean text).</td></tr>';
+        }
+
+        const restoreDemo = document.getElementById('piiRestorationDemo');
+        if (preserve && data.preserved_placeholders && Object.keys(data.preserved_placeholders).length > 0) {
+          restoreDemo.style.display = 'block';
+          window._lastRedactedText = data.redacted_text;
+          window._lastSessionMap = data.preserved_placeholders;
+        } else {
+          restoreDemo.style.display = 'none';
+        }
+
+      } catch (err) {
+        alert("PII Redaction error: " + err.message);
+      }
+    }
+
+    function restorePIISession() {
+      if (!window._lastSessionMap || !window._lastRedactedText) return;
+      let restored = window._lastRedactedText;
+      for (const [placeholder, raw] of Object.entries(window._lastSessionMap)) {
+        restored = restored.replace(placeholder, raw);
+      }
+      document.getElementById('dispRestoredText').innerHTML = `<strong>Restored Text:</strong> <code>${restored}</code>`;
+    }
+
+    // Benchmark & Retest Execution
+    async function runBenchmarkAdversarial(mode, guardrails) {
+      try {
+        const res = await fetch('/api/run-adversarial', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: mode, enable_guardrails: guardrails })
+        });
+        const data = await res.json();
+        currentFindings = data.findings;
+        renderFindingsTable(data.findings);
+
+        document.getElementById('benchTotalProbes').textContent = data.total_probes;
+        document.getElementById('benchPassRate').textContent = `${data.pass_rate_pct}%`;
+        document.getElementById('benchPassRate').style.color = data.pass_rate_pct >= 80 ? '#10b981' : '#ef4444';
+        document.getElementById('benchPassDetail').textContent = `${data.passed} passed / ${data.failed} failed`;
+      } catch (err) {
+        alert("Benchmark run failed: " + err.message);
+      }
+    }
+
+    async function runPIIBenchmarkSuite() {
+      try {
+        const res = await fetch('/api/eval-pii', { method: 'POST' });
+        const data = await res.json();
+        alert(`PII Benchmark Complete!\nMacro F1 Score: ${(data.macro_f1 * 100).toFixed(1)}%\nPrecision: ${(data.macro_precision * 100).toFixed(1)}%\nRecall: ${(data.macro_recall * 100).toFixed(1)}%\nAverage Latency: ${data.avg_latency_ms} ms`);
+      } catch (err) {
+        alert("PII Benchmark failed: " + err.message);
+      }
+    }
+
+    async function runFullPipeline(customMode, customUrl) {
+      const mode = customMode || document.getElementById('studioTargetMode').value || 'vulnerable';
+      const extUrl = customUrl !== undefined ? customUrl : (document.getElementById('externalApiUrl') ? document.getElementById('externalApiUrl').value.trim() : null);
+
+      if (!confirm(`Execute full safety & compliance pipeline on [${mode.toUpperCase()}] target?`)) return;
+      try {
+        const res = await fetch('/api/run-pipeline', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: mode, external_url: extUrl })
+        });
+        const data = await res.json();
+        alert(`Pipeline Execution Complete!\nTarget: ${data.target_mode}\nBaseline Pass Rate: ${data.baseline_pass_rate}\nRemediated Retest: ${data.retest_pass_rate}\nVulnerabilities Resolved: ${data.vulnerabilities_fixed}`);
+        await loadInitialFindings();
+        await loadInitialMatrix();
+        switchView('view-benchmark');
+      } catch (err) {
+        alert("Pipeline failed: " + err.message);
+      }
+    }
+
+    async function runFullPipelineFromStudio() {
+      const mode = document.getElementById('studioTargetMode').value;
+      const extUrl = document.getElementById('externalApiUrl').value.trim() || null;
+      if (mode === 'external' && !extUrl) {
+        alert("Please provide the external endpoint URL first.");
+        return;
+      }
+      await runFullPipeline(mode, extUrl);
+    }
+
+    async function loadInitialFindings() {
+      try {
+        const res = await fetch('/api/artifacts/findings_log.json');
+        if (res.ok) {
+          currentFindings = await res.json();
+          renderFindingsTable(currentFindings);
+        }
+      } catch (e) {
+        console.warn("No previous findings log found yet.");
+      }
+    }
+
+    function renderFindingsTable(findings) {
+      const tbody = document.getElementById('findingsTableBody');
+      tbody.innerHTML = '';
+      if (!findings || findings.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;" class="text-muted">No test results available.</td></tr>';
+        return;
+      }
+      findings.forEach((f, idx) => {
+        const row = document.createElement('tr');
+        const passBadge = f.passed ? 'badge-pass' : 'badge-fail';
+        const sevBadge = `badge-${f.severity.toLowerCase()}`;
+        const detailId = `finding-row-detail-${idx}`;
+        row.innerHTML = `
+          <td><code>${f.probe_id}</code></td>
+          <td><strong>${f.probe_name}</strong><br><small class="text-muted">${f.category}</small></td>
+          <td><span class="badge ${sevBadge}">${f.severity}</span></td>
+          <td><span class="badge ${passBadge}">${f.passed ? 'PASS' : 'FAIL'}</span></td>
+          <td>
+            <div>${f.failure_reason || f.expected_behavior}</div>
+            <button class="btn btn-sm btn-outline" style="margin-top:6px; padding:2px 8px; font-size:11px;" onclick="toggleRowDetail('${detailId}')">
+              🔍 Inspect Reproduction & Remediation
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+
+        // Expanded detail row
+        const detailRow = document.createElement('tr');
+        detailRow.id = detailId;
+        detailRow.style.display = 'none';
+        detailRow.innerHTML = `
+          <td colspan="5" style="padding:0; background: rgba(15, 23, 42, 0.6);">
+            <div class="finding-expandable">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <strong>🔬 Finding Inspection: [${f.probe_id}] ${f.probe_name}</strong>
+                <span class="badge ${f.reproducible ? 'badge-pass' : 'badge-low'}">${f.reproducible ? 'Confirmed Reproducible' : 'Single Trial'}</span>
+              </div>
+              <div class="finding-grid">
+                <div class="finding-box">
+                  <div class="finding-box-title">🔁 Reproduction Steps</div>
+                  <pre style="white-space:pre-wrap; font-size:11px; color:#cbd5e1; margin:0;">${escapeHtml(f.reproduction_steps || '1. Submit probe prompt to model.\n2. Observe response assertion status.')}</pre>
+                </div>
+                <div class="finding-box">
+                  <div class="finding-box-title">🛡️ Recommended Remediation</div>
+                  <div style="color:#93c5fd; font-size:12px;">${escapeHtml(f.remediation_suggestion || 'Apply prompt input fencing and output safety guardrail filters.')}</div>
+                </div>
+              </div>
+              <div style="margin-top:10px;">
+                <div class="finding-box-title">🔍 Empirical Model Output Observed</div>
+                <pre style="background:rgba(0,0,0,0.3); padding:8px; border-radius:4px; font-size:11px; color:#fca5a5; white-space:pre-wrap; margin:0;">${escapeHtml(f.evidence || f.actual_output || f.failure_reason || 'N/A')}</pre>
+              </div>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(detailRow);
+      });
+      renderDedicatedFindings(findings);
+    }
+
+    function toggleRowDetail(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = el.style.display === 'none' ? 'table-row' : 'none';
+    }
+
+    function renderDedicatedFindings(findings) {
+      const container = document.getElementById('dedicatedFindingsList');
+      if (!container) return;
+      container.innerHTML = '';
+      if (!findings || findings.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding: 20px;" class="text-muted">No findings recorded. Run benchmark to generate findings.</div>';
+        return;
+      }
+
+      const failures = findings.filter(f => !f.passed);
+      if (failures.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding: 20px; color:#34d399;">✅ Zero vulnerabilities detected! All probes passed safety criteria.</div>';
+        return;
+      }
+
+      failures.forEach((f, idx) => {
+        const item = document.createElement('div');
+        item.style.cssText = 'background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px;';
+        const sevClass = `badge-${f.severity.toLowerCase()}`;
+        item.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 8px;">
+            <div>
+              <span style="font-size:15px; font-weight:700;">#${idx + 1}. [${f.probe_id}] ${escapeHtml(f.probe_name)}</span>
+              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Category: <code>${f.category}</code></div>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <span class="badge ${sevClass}">${f.severity}</span>
+              <span class="badge ${f.reproducible ? 'badge-pass' : 'badge-low'}">${f.reproducible ? '✅ Confirmed Reproducible' : 'Single Trial'}</span>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 10px; font-size:13px;">
+            <strong style="color:#f87171;">Assertion Violation:</strong>
+            <span style="color:#fca5a5;">${escapeHtml(f.failure_reason || 'Safety boundary violated.')}</span>
+          </div>
+
+          <div class="finding-grid">
+            <div class="finding-box">
+              <div class="finding-box-title">🔁 Reproduction Instructions</div>
+              <pre style="white-space:pre-wrap; font-family:monospace; font-size:11px; color:#cbd5e1; margin:0;">${escapeHtml(f.reproduction_steps || '1. Send probe to model.\n2. Verify response assertion.')}</pre>
+            </div>
+            <div class="finding-box">
+              <div class="finding-box-title">🛡️ Remediation Plan</div>
+              <div style="color:#93c5fd; font-size:12px; line-height:1.4;">${escapeHtml(f.remediation_suggestion || 'Implement input safety fences and output redactors.')}</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 10px;">
+            <div class="finding-box-title">🔍 Empirical Evidence (Model Output Dump)</div>
+            <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.06); border-radius:4px; padding:10px; font-family:monospace; font-size:11px; color:#fca5a5; white-space:pre-wrap;">${escapeHtml(f.evidence || f.actual_output || 'N/A')}</div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function filterDedicatedFindings() {
+      const sev = document.getElementById('findingsFilterSev').value;
+      if (sev === 'ALL') {
+        renderDedicatedFindings(currentFindings);
+      } else {
+        renderDedicatedFindings(currentFindings.filter(f => f.severity === sev));
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function filterFindingsTable() {
+      const sev = document.getElementById('filterSeverity').value;
+      if (sev === 'ALL') {
+        renderFindingsTable(currentFindings);
+      } else {
+        renderFindingsTable(currentFindings.filter(f => f.severity === sev));
+      }
+    }
+
+    async function loadInitialMatrix() {
+      try {
+        const res = await fetch('/api/artifacts/audit_matrix.json');
+        if (res.ok) {
+          currentMatrix = await res.json();
+          renderMatrixTable(currentMatrix);
+        }
+      } catch (e) {
+        console.warn("No audit matrix found yet.");
+      }
+    }
+
+    function renderMatrixTable(matrix) {
+      const tbody = document.getElementById('matrixTableBody');
+      tbody.innerHTML = '';
+      if (!matrix || matrix.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;" class="text-muted">No matrix available.</td></tr>';
+        return;
+      }
+      matrix.forEach(m => {
+        const row = document.createElement('tr');
+        const retestBadge = m.retest_status === 'Passed' ? 'badge-pass' : 'badge-fail';
+        row.innerHTML = `
+          <td><code>${m.control_id}</code></td>
+          <td><strong>${m.framework}</strong></td>
+          <td>${m.function_or_article}<br><small class="text-muted">${m.control_name}</small></td>
+          <td><span class="badge badge-${m.severity.toLowerCase()}">${m.severity}</span></td>
+          <td><span class="badge ${retestBadge}">${m.retest_status}</span></td>
+          <td><small>${m.mitigation_and_owner}</small></td>
+          <td><small class="text-muted">${m.test_evidence_ids ? m.test_evidence_ids.slice(0,3).join(', ') : ''}</small></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function filterMatrixTable() {
+      const fw = document.getElementById('filterFramework').value;
+      if (fw === 'ALL') {
+        renderMatrixTable(currentMatrix);
+      } else if (fw === 'NIST') {
+        renderMatrixTable(currentMatrix.filter(m => m.framework.includes('NIST')));
+      } else {
+        renderMatrixTable(currentMatrix.filter(m => m.framework.includes('EU')));
+      }
+    }
+
+    function openArtifact(filename) {
+      window.open(`/api/artifacts/${filename}`, '_blank');
+    }
+  </script>
+</body>
+</html>

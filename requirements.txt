@@ -1,0 +1,15 @@
+# Core Requirements for AI Safety & Compliance Readiness Pipeline
+pydantic>=2.0.0
+fastapi>=0.100.0
+uvicorn>=0.20.0
+httpx>=0.24.0
+pyyaml>=6.0
+pytest>=7.0.0
+click>=8.0.0
+
+# Optional extended PII recognizers backend
+# To install Microsoft Presidio and spaCy NLP engine:
+#   pip install presidio-analyzer>=2.2.0 presidio-anonymizer>=2.2.0 spacy>=3.7.0
+#   python -m spacy download en_core_web_sm
+# The pipeline automatically detects if Presidio is present and activates it;
+# otherwise it runs on the built-in native multi-locale engine with zero external dependencies.
